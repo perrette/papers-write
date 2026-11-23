@@ -30,7 +30,7 @@ jobs:
           if [ -z "$id" ]; then
             # the id from the answer: a new draft is not listed at once
             id=$(gh api -X POST "repos/$GITHUB_REPOSITORY/releases" \
-              -f tag_name="$GITHUB_REF_NAME" -f name="$GITHUB_REF_NAME" -F draft=true --jq .id)
+              -f tag_name="$GITHUB_REF_NAME" -f name="$GITHUB_REF_NAME" -F draft=true -F prerelease=true --jq .id)
           fi
           # without an id, the builds would skip their uploads
           test -n "$id"
@@ -84,7 +84,7 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ""
         with:
           releaseId: ${{ needs.draft.outputs.id }}
-          includeUpdaterJson: true
+          includeUpdaterJson: false
           assetNamePattern: ${{ matrix.assets }}
           tauriScript: npm run tauri
           args: ${{ matrix.args }}
